@@ -40,6 +40,9 @@ public class LoginController {
             scene = new Scene(root.load());
             stage.setScene(scene);
             stage.show();
+            stage.setResizable(true);
+            stage.setMinHeight(450.0);
+            stage.setMinWidth(600.0);
 
             System.out.println("login");
         }else{
