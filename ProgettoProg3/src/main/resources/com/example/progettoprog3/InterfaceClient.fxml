@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.progettoprog3.Controller.ClientController">
    <left>
       <AnchorPane prefHeight="338.0" prefWidth="103.0" BorderPane.alignment="CENTER">
          <children>
@@ -30,7 +29,7 @@
    <top>
       <AnchorPane fx:id="ancorPane" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="benvenutoLabel" contentDisplay="RIGHT" layoutX="218.0" layoutY="7.0" prefHeight="51.0" prefWidth="156.0" style="-fx-alignment: center;" text="Benvenuto -utente-" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="226.0" AnchorPane.topAnchor="7.0" />
+            <Label fx:id="benvenutoLabel" contentDisplay="RIGHT" layoutX="218.0" layoutY="7.0" prefHeight="51.0" prefWidth="156.0" style="-fx-alignment: center;" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="226.0" AnchorPane.topAnchor="7.0" />
          </children>
       </AnchorPane>
    </top>

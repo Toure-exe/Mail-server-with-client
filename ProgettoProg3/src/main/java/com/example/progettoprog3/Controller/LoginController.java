@@ -35,9 +35,17 @@ public class LoginController {
         if(list.search(currentEmail)){
            // root = FXMLLoader.load(getClass().getResource("InterfaceClient.fxml"));
 
-            FXMLLoader root = new FXMLLoader(HelloApplication.class.getResource("InterfaceClient.fxml"));
+            String emailLoader = email.getText();
+
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("InterfaceClient.fxml"));
+            root = loader.load();
+
+            ClientController scene2Controller = loader.getController();
+            scene2Controller.displayName(emailLoader);
+
+            //FXMLLoader root = new FXMLLoader(HelloApplication.class.getResource("InterfaceClient.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            scene = new Scene(root.load());
+            scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
             stage.setResizable(true);
