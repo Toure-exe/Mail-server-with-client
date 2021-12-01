@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.progettoprog3.Controller.ClientController">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.progettoprog3.Client.Controller.ClientController">
    <left>
       <AnchorPane prefHeight="338.0" prefWidth="103.0" BorderPane.alignment="CENTER">
          <children>
@@ -16,7 +16,7 @@
                <children>
                   <Button fx:id="scriviButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="62.0" text="Scrivi" />
                   <AnchorPane prefHeight="365.0" prefWidth="100.0" />
-                  <Button fx:id="esciButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="64.0" text="Esci" VBox.vgrow="NEVER">
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitButton" prefHeight="24.0" prefWidth="64.0" text="Exit" VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets top="250.0" />
                      </VBox.margin>
