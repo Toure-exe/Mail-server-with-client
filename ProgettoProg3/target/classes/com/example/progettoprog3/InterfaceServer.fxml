@@ -11,5 +11,6 @@
       <TextArea fx:id="log" layoutX="14.0" layoutY="62.0" prefHeight="328.0" prefWidth="575.0" />
       <Button fx:id="startButton" layoutX="14.0" layoutY="18.0" mnemonicParsing="false" onAction="#onStartButton" text="START" />
       <Button fx:id="endButton" layoutX="92.0" layoutY="18.0" mnemonicParsing="false" onAction="#onEndButton" prefHeight="24.0" prefWidth="61.0" text="END" />
+      <Button fx:id="resetEmailButton" layoutX="475.0" layoutY="18.0" mnemonicParsing="false" onAction="#onResetEmailButton" text="Reset memory" />
    </children>
 </AnchorPane>

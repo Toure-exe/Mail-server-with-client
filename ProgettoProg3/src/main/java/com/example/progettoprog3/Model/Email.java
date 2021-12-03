@@ -1,17 +1,20 @@
 package com.example.progettoprog3.Model;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.UUID;
+//import java.util.Date;
 
-public class Email {
-    private String ID;
+public class Email implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private UUID ID;
     private String receiver;
     private String sender;
     private String object;
     private String text;
-    private Date date;
+    private String date;
 
-    public Email(String ID, String receiver, String sender, String object, String text, Date date) {
-        this.ID = ID;
+    public Email(String receiver, String sender, String object, String text, String date) {
+        this.ID = UUID.randomUUID();
         this.receiver = receiver;
         this.sender = sender;
         this.object = object;
@@ -19,12 +22,8 @@ public class Email {
         this.date = date;
     }
 
-    public String getID() {
+    public UUID getID() {
         return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
     }
 
     public String getReceiver() {
@@ -59,11 +58,11 @@ public class Email {
         this.text = text;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

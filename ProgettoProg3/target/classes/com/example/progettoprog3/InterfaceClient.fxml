@@ -14,7 +14,7 @@
          <children>
             <VBox layoutX="14.0" prefHeight="330.0" prefWidth="62.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button fx:id="scriviButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="62.0" text="Scrivi" />
+                  <Button fx:id="writeButton" mnemonicParsing="false" onAction="#onWriteButton" prefHeight="24.0" prefWidth="62.0" text="Write" />
                   <AnchorPane prefHeight="365.0" prefWidth="100.0" />
                   <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitButton" prefHeight="24.0" prefWidth="64.0" text="Exit" VBox.vgrow="NEVER">
                      <VBox.margin>
@@ -36,7 +36,7 @@
    <center>
       <AnchorPane prefHeight="338.0" prefWidth="368.0" BorderPane.alignment="CENTER">
          <children>
-            <ListView fx:id="listView" layoutX="-4.0" prefHeight="329.0" prefWidth="489.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="0.0" />
+            <ListView fx:id="listView" layoutX="-4.0" onMouseClicked="#handleMouseClick" prefHeight="329.0" prefWidth="489.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </center>

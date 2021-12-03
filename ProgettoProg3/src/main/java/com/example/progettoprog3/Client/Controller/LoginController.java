@@ -26,6 +26,7 @@ public class LoginController {
 
     @FXML
     private TextField email;
+
     private UsersList list = new UsersList();
     private Stage stage;
     private Scene scene;
