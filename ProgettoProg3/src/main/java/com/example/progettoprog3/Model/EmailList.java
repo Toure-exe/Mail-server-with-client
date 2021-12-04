@@ -19,8 +19,15 @@ public class EmailList implements Serializable{
 
     }
 
-    public void deleteEmail(int ID) {
-
+    public void deleteEmail(Email email) {
+        int i = 0;
+        for (Email temp : this.emailList) {
+            if (temp.getID().equals(email.getID())){
+                break;
+            }
+            i++;
+        }
+        this.emailList.remove(i);
     }
 
     public ArrayList<Email> getEmailList() {
@@ -33,4 +40,5 @@ public class EmailList implements Serializable{
         else
             return null;
     }
+
 }

@@ -38,6 +38,7 @@ public class ClientController {
     private Scene scene;
     private Parent root;
     private String email;
+    private ArrayList<Email> emailList = null;
 
     public boolean displayName(String email) {
         benvenutoLabel.setText("Hello: " + email);
@@ -45,7 +46,14 @@ public class ClientController {
     }
 
     public void passEmail(String email) {
+        this.email = email;
+        System.out.println("passEmail method: " + email);
         benvenutoLabel.setText("You are logged with: " + email);
+        //dato che qui ci passiamo quando torniamo indietro dalla pagina writeEmail e viewEmail creando dei nuovi oggetti
+        //abbiamo bisogno di riscaricare la posta dal server
+        //approfittiamo dell'occasione per aggiornare la posta elettronica del client attraverso le azioni di spostamento
+        this.emailList = downloadEmailList();
+        viewEmailList();
     }
 
     public void onExitButton(ActionEvent event) {
@@ -108,14 +116,8 @@ public class ClientController {
 
                 ObjectInputStream in = new ObjectInputStream(s.getInputStream());
                 EmailList emailobj = (EmailList)in.readObject();
-                ArrayList<Email> emailList = emailobj.getEmailList();
-                System.out.println(emailList.size());
-                for (Email tempEmail : emailList) {
-                    //listView.getItems().add("From: " + tempEmail.getSender() + " Object: " + tempEmail.getObject() + " Date: " +tempEmail.getDate());
-                    listView.getItems().add(tempEmail);
-                }
-                
-
+                this.emailList = emailobj.getEmailList();
+                viewEmailList();
             } finally {
                 s.close();
                 return true;
@@ -126,14 +128,51 @@ public class ClientController {
         }
     }
 
-    public void handleMouseClick(MouseEvent mouseEvent) {
+    public void handleMouseClick(MouseEvent mouseEvent) throws IOException {
         System.out.println("clicked on " + listView.getSelectionModel().getSelectedItem());
-        Email email = (Email)listView.getSelectionModel().getSelectedItem();
-        System.out.println(email.getText());
+        int index = listView.getSelectionModel().getSelectedIndex();
+        System.out.println(index);
+        Email emailSingle = this.emailList.get(index);
+
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("ViewEmail.fxml"));
+        root = loader.load();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.passEmail(emailSingle, this.email);
+        stage = (Stage)((Node)mouseEvent.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    /*public void handleMouseClick(MouseEvent arg0) {
+    private ArrayList<Email> downloadEmailList() {
+        try {
+            String clientIP = InetAddress.getLocalHost().getHostName();
+            Socket s = new Socket(clientIP, 8189);
+            try {
+                ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                out.writeObject("UPDATE-" + this.email);
 
-        System.out.println("clicked on " + email.getObject());
-    }*/
+                ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+                EmailList emailobj = (EmailList)in.readObject();
+                this.emailList = emailobj.getEmailList();
+
+            } finally {
+                s.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error");
+        } finally {
+            return this.emailList;
+        }
+    }
+
+    private void viewEmailList() {
+        if (this.emailList != null && this.emailList.size() > 0) {
+            for (Email tempEmail : this.emailList) {
+                listView.getItems().add("From: " + tempEmail.getSender() + " Object: " + tempEmail.getObject() + " Date: " + tempEmail.getDate());
+                //listView.getItems().add(tempEmail);
+            }
+        }
+    }
+
 }
