@@ -3,7 +3,7 @@ package com.example.progettoprog3.Model;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public class EmailList implements Serializable{
+public class EmailList implements Serializable {
     private static final long serialVersionUID = 1L;
     private ArrayList<Email> emailList = null;
 

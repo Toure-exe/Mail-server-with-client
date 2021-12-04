@@ -71,6 +71,46 @@ public class EmailController {
         System.out.println(this.email);
     }
 
+    public void replyEmail(Email emailObj, String email) {
+        this.email = email;
+        subject.setText(emailObj.getSender());
+        object.setText("Reply: " + emailObj.getObject());
+    }
+
+    public void replyAllEmail(Email emailObj, String email) {
+        this.email = email;
+        object.setText("Reply: " + emailObj.getObject());
+        ArrayList<String> receiverList = emailObj.getReceiver();
+        String res = "";
+        int i = 0;
+        for (String receiver : receiverList) {
+            if (!receiver.equals(this.email))
+                res += receiver + " ";
+        }
+        subject.setText(emailObj.getSender() + " " + res);
+    }
+
+    public void forwardEmail(Email emailObj, String email) {
+        this.email = email;
+        subject.setText(emailObj.getSender());
+        object.setText(emailObj.getObject());
+        text.setText("\nForwarded message: \n" + emailObj.getText());
+    }
+
+    public void forwardAllEmail(Email emailObj, String email) {
+        this.email = email;
+        object.setText(emailObj.getObject());
+        text.setText("\nForwarded message: \n" + emailObj.getText());
+        ArrayList<String> receiverList = emailObj.getReceiver();
+        String res = "";
+        int i = 0;
+        for (String receiver : receiverList) {
+            if (!receiver.equals(this.email))
+                res += receiver + " ";
+        }
+        subject.setText(emailObj.getSender() + " " + res);
+    }
+
     public void passEmail(Email emailSingle, String email) {
         textAreaEmail.setEditable(false);
         this.email = email;
@@ -84,6 +124,50 @@ public class EmailController {
             replyAllButton.setVisible(false);
             forwardAllButton.setVisible(false);
         }
+    }
+
+    public void onReplyButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("WriteEmail.fxml"));
+        root = loader.load();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.replyEmail(this.emailObj, this.email);
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void onReplyAllButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("WriteEmail.fxml"));
+        root = loader.load();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.replyAllEmail(this.emailObj, this.email);
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void onForwardButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("WriteEmail.fxml"));
+        root = loader.load();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.forwardEmail(this.emailObj, this.email);
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void onForwardAllButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("WriteEmail.fxml"));
+        root = loader.load();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.forwardAllEmail(this.emailObj, this.email);
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void onDeleteButton(ActionEvent event) throws IOException {
@@ -120,7 +204,7 @@ public class EmailController {
         stage.show();
     }
 
-    public void onSendButton(ActionEvent event) {
+    public void onSendButton(ActionEvent event) throws IOException {
         obj = object.getText();
         sbj = subject.getText();
         textEmail = text.getText();
@@ -133,6 +217,15 @@ public class EmailController {
         System.out.println(textEmail);
         Email email = new Email(sbj, this.email, obj, textEmail, date);
         sendEmail(email);
+        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
+        root = loader.load();
+        ClientController scene2Controller = loader.getController();
+        System.out.println("onBackButton method: " + this.email);
+        scene2Controller.passEmail(this.email);
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void sendEmail(Email email) {

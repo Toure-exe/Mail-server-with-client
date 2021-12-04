@@ -46,6 +46,7 @@ public class SingleConnection implements Runnable{
                         log.appendText("User: " + temp[1] + " is logged out \n");
                     } else if (cont.contains("@") && cont.contains("UPDATE")) {
                         temp = cont.split("\\-");
+                        System.out.println(temp[1]);
                         path = "src/main/java/com/example/progettoprog3/Server/User/" + temp[1] + ".txt";
                         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
                         EmailList emailList = (EmailList)ois.readObject();
@@ -91,7 +92,7 @@ public class SingleConnection implements Runnable{
                         String path1 = "src/main/java/com/example/progettoprog3/Server/User/";
                         ArrayList<String> receivers = email.getReceiver();
                         for (String receiver : receivers) {
-                            log.appendText("New email arrived from: " + email.getSender() + " to: " + email.toStringReceiver() + "\n");
+                            log.appendText("New email arrived from: " + email.getSender() + " to: " + receiver + "\n");
                             //catch the obj EmailList from file
                             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path1 + receiver + ".txt"));
                             EmailList emailList = (EmailList)ois.readObject();

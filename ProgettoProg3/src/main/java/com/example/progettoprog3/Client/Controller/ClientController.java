@@ -32,6 +32,9 @@ public class ClientController {
     private Button writeButton;
 
     @FXML
+    private Button refreshButton;
+
+    @FXML
     private ListView listView;
 
     private Stage stage;
@@ -53,6 +56,12 @@ public class ClientController {
         //abbiamo bisogno di riscaricare la posta dal server
         //approfittiamo dell'occasione per aggiornare la posta elettronica del client attraverso le azioni di spostamento
         this.emailList = downloadEmailList();
+        viewEmailList();
+    }
+
+    public void onRefreshButton(ActionEvent event) {
+        listView.getItems().clear();
+        downloadEmailList();
         viewEmailList();
     }
 
