@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.io.File.*;
 import com.example.progettoprog3.Model.Email;
@@ -17,6 +18,7 @@ public class SingleConnection implements Runnable{
 
     private Socket incoming = null;
     private Object container = null;
+    private HashMap<String, Integer> users;
 
     @FXML
     private TextArea log;
@@ -24,6 +26,10 @@ public class SingleConnection implements Runnable{
     public SingleConnection(TextArea log, Socket incoming) {
         this.log = log;
         this.incoming = incoming;
+        users = new HashMap<>();
+        users.put("giulio.cesare.it", 0);
+        users.put("mario@rossi.it", 1);
+        users.put("luigi@bianchi.it", 2);
     }
 
     @Override
@@ -89,39 +95,35 @@ public class SingleConnection implements Runnable{
                         oos.flush();
                         oos.close();
                     } else {
+                        //section false --> send email
                         String path1 = "src/main/java/com/example/progettoprog3/Server/User/";
                         ArrayList<String> receivers = email.getReceiver();
+                        boolean res = true;
                         for (String receiver : receivers) {
-                            log.appendText("New email arrived from: " + email.getSender() + " to: " + receiver + "\n");
-                            //catch the obj EmailList from file
-                            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path1 + receiver + ".txt"));
-                            EmailList emailList = (EmailList)ois.readObject();
-                            emailList.addEmail(email);
-                            ois.close();
-                            //write the updated obj EmailList into the file
-                            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path1 + receiver + ".txt"));
-                            oos.writeObject(emailList);
-                            oos.flush();
-                            oos.close();
+                            if (!users.containsKey(receiver) && res)
+                                res = false;
                         }
-                        /*//section false --> send email
-                        log.appendText("New email arrived from: " + email.getSender() + " to: " + email.toStringReceiver() + "\n");
-                        System.out.println(path);
-
-                        //catch the obj EmailList from file
-                        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-                        EmailList emailList = (EmailList)ois.readObject();
-                        emailList.addEmail(email);
-                        ois.close();
-                        //write the updated obj EmailList into the file
-                        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
-                        oos.writeObject(emailList);
-                        oos.flush();
-                        oos.close();*/
+                        if (res) {
+                            for (String receiver : receivers) {
+                                //catch the obj EmailList from file
+                                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path1 + receiver + ".txt"));
+                                EmailList emailList = (EmailList)ois.readObject();
+                                emailList.addEmail(email);
+                                ois.close();
+                                //write the updated obj EmailList into the file
+                                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path1 + receiver + ".txt"));
+                                oos.writeObject(emailList);
+                                oos.flush();
+                                oos.close();
+                                log.appendText("New email arrived from: " + email.getSender() + " to: " + receiver + "\n");
+                            }
+                            outStream.writeObject("OK");
+                        } else {
+                            outStream.writeObject("ERROR");
+                            log.appendText("Email error. Wrong receiver \n");
+                        }
                     }
-
                 }
-
             } finally {
                 incoming.close();
             }

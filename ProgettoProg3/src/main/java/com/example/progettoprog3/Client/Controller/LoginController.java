@@ -59,9 +59,6 @@ public class LoginController {
                 a.setContentText("Server temporary down");
                 a.show();// show the dialog
             }
-
-
-
             System.out.println("login");
         }else{
             System.out.println("login non riuscito");

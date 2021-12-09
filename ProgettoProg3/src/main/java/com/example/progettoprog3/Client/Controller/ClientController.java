@@ -1,7 +1,9 @@
 package com.example.progettoprog3.Client.Controller;
+import com.example.progettoprog3.Client.Application.ClientConnection;
 import com.example.progettoprog3.ClientApplication;
 import com.example.progettoprog3.Model.EmailList;
 import com.example.progettoprog3.Model.Email;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,6 +18,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -42,6 +46,8 @@ public class ClientController {
     private Parent root;
     private String email;
     private ArrayList<Email> emailList = null;
+    private Thread t = null;
+    private ClientConnection cc = null;
 
     public boolean displayName(String email) {
         benvenutoLabel.setText("Hello: " + email);
@@ -52,11 +58,14 @@ public class ClientController {
         this.email = email;
         System.out.println("passEmail method: " + email);
         benvenutoLabel.setText("You are logged with: " + email);
-        //dato che qui ci passiamo quando torniamo indietro dalla pagina writeEmail e viewEmail creando dei nuovi oggetti
-        //abbiamo bisogno di riscaricare la posta dal server
-        //approfittiamo dell'occasione per aggiornare la posta elettronica del client attraverso le azioni di spostamento
-        this.emailList = downloadEmailList();
-        viewEmailList();
+        //this.emailList = downloadEmailList();
+        //viewEmailList();
+        Alert a = new Alert(Alert.AlertType.NONE);
+        a.setAlertType(Alert.AlertType.ERROR); // set alert type
+        a.initStyle(StageStyle.TRANSPARENT);
+        this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
+        t = new Thread(cc);
+        t.start();
     }
 
     public void onRefreshButton(ActionEvent event) {
@@ -87,7 +96,7 @@ public class ClientController {
                 scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
-
+                t.interrupt();
             }
         } catch (IOException e) {
             System.out.println("Error");
@@ -101,14 +110,15 @@ public class ClientController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();*/
+        t.interrupt();
         FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("WriteEmail.fxml"));
         root = loader.load();
-        EmailController scene2Controller = loader.getController();
-        scene2Controller.passSender(this.email);
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        EmailController scene2Controller = loader.getController();
+        scene2Controller.passSender(this.email);
     }
 
     private boolean setConnection(String email) {
@@ -125,8 +135,17 @@ public class ClientController {
 
                 ObjectInputStream in = new ObjectInputStream(s.getInputStream());
                 EmailList emailobj = (EmailList)in.readObject();
-                this.emailList = emailobj.getEmailList();
+                ArrayList<Email> emailListDownload = emailobj.getEmailList();
+                this.emailList = reverseEmailList(emailListDownload);
                 viewEmailList();
+                Alert a = new Alert(Alert.AlertType.NONE);
+                a.setAlertType(Alert.AlertType.ERROR); // set alert type
+                a.initStyle(StageStyle.UNDECORATED);
+                this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
+                //Platform.runLater(cc);
+                t = new Thread(cc);
+                t.start();
+
             } finally {
                 s.close();
                 return true;
@@ -138,9 +157,13 @@ public class ClientController {
     }
 
     public void handleMouseClick(MouseEvent mouseEvent) throws IOException {
+        t.interrupt();
         System.out.println("clicked on " + listView.getSelectionModel().getSelectedItem());
         int index = listView.getSelectionModel().getSelectedIndex();
         System.out.println(index);
+        ArrayList<Email> emailListUpdate = this.cc.getEmailListUP();
+        this.emailList = reverseEmailList(emailListUpdate);
+        System.out.println(this.emailList.size());
         Email emailSingle = this.emailList.get(index);
 
         FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("ViewEmail.fxml"));
@@ -182,6 +205,14 @@ public class ClientController {
                 //listView.getItems().add(tempEmail);
             }
         }
+    }
+
+    private ArrayList<Email> reverseEmailList(ArrayList<Email> emailList) {
+        ArrayList<Email> revArrayList = new ArrayList<>();
+        for (int i = emailList.size() - 1; i >= 0; i--) {
+            revArrayList.add(emailList.get(i));
+        }
+        return revArrayList;
     }
 
 }

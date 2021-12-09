@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -175,16 +172,17 @@ public class EmailController {
         ArrayList<String> receiver = new ArrayList<>();
         receiver.add(this.email);
         this.emailObj.setReceiver(receiver);
-        sendEmail(this.emailObj);
-        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
-        root = loader.load();
-        ClientController scene2Controller = loader.getController();
-        System.out.println("onBackButton method: " + this.email);
-        scene2Controller.passEmail(this.email);
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        if (sendEmail(this.emailObj)) {
+            FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
+            root = loader.load();
+            ClientController scene2Controller = loader.getController();
+            System.out.println("onBackButton method: " + this.email);
+            scene2Controller.passEmail(this.email);
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
     public void onBackButton(ActionEvent event) throws IOException {
@@ -195,6 +193,7 @@ public class EmailController {
         stage.show();*/
         FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
         root = loader.load();
+        //ClientController scene2Controller = loader.getController();
         ClientController scene2Controller = loader.getController();
         System.out.println("onBackButton method: " + this.email);
         scene2Controller.passEmail(this.email);
@@ -206,40 +205,81 @@ public class EmailController {
 
     public void onSendButton(ActionEvent event) throws IOException {
         obj = object.getText();
-        sbj = subject.getText();
         textEmail = text.getText();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        date = dtf.format(now);
-        System.out.println(date);
-        System.out.println(obj);
-        System.out.println(sbj);
-        System.out.println(textEmail);
-        Email email = new Email(sbj, this.email, obj, textEmail, date);
-        sendEmail(email);
-        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
-        root = loader.load();
-        ClientController scene2Controller = loader.getController();
-        System.out.println("onBackButton method: " + this.email);
-        scene2Controller.passEmail(this.email);
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        sbj = subject.getText();
+        String[] temp = sbj.split(" ");
+        boolean res = true;
+        if (sbj.isBlank())
+            res = false;
+        for (int i = 0; i < temp.length && res; i++) {
+            if (!temp[i].contains("@") || (!temp[i].contains(".it") && !temp[i].contains(".com"))) {
+                res = false;
+            }
+        }
+        if (res) {
+            //email insert correctly
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            date = dtf.format(now);
+            System.out.println(date);
+            System.out.println(obj);
+            System.out.println(sbj);
+            System.out.println(textEmail);
+            Email email = new Email(sbj, this.email, obj, textEmail, date);
+            if (sendEmail(email)) {
+                FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
+                root = loader.load();
+                ClientController scene2Controller = loader.getController();
+                System.out.println("onBackButton method: " + this.email);
+                scene2Controller.passEmail(this.email);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            }
+
+        } else {
+            Alert a = new Alert(Alert.AlertType.NONE);
+            a.setAlertType(Alert.AlertType.ERROR); // set alert type
+            a.setContentText("Wrong email, please write again");
+            Optional<ButtonType> result = a.showAndWait();
+            if(!result.isPresent() || result.get() == ButtonType.OK) {
+                // alert is exited, no button has been pressed.
+                // or okay button is pressed
+                subject.setText("");
+            }
+        }
     }
 
-    private void sendEmail(Email email) {
+    private boolean sendEmail(Email email) {
+        Alert a = new Alert(Alert.AlertType.NONE);
+        a.setAlertType(Alert.AlertType.ERROR);
         try {
             String clientIP = InetAddress.getLocalHost().getHostName();
             Socket s = new Socket(clientIP, 8189);
             try {
+                //send the email to the server
                 ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                 out.writeObject(email);
+                //receive the response
+                ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+                String response = (String)in.readObject();
+                if (response.equals("ERROR")) {
+                     // set alert type
+                    a.setContentText("Email error: user not exists");
+                    a.show();
+                }
+            } catch (ClassNotFoundException e1) {
+                System.out.println("Error");
             } finally {
                 s.close();
+                return true;
             }
         } catch (IOException e) {
             System.out.println("Error");
+            a.setContentText("Server temporary down, please try again");
+            a.show();
+            return false;
         }
     }
 
