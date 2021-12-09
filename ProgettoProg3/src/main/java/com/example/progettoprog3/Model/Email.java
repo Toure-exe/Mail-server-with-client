@@ -20,7 +20,8 @@ public class Email implements Serializable {
         this.receiver = new ArrayList<>();
         String[] temp = receiver.split(" ");
         for (int i = 0; i < temp.length; i++) {
-            this.receiver.add(temp[i]);
+            if (!temp[i].isBlank())
+                this.receiver.add(temp[i]);
         }
         this.sender = sender;
         this.object = object;

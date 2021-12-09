@@ -36,9 +36,6 @@ public class ClientController {
     private Button writeButton;
 
     @FXML
-    private Button refreshButton;
-
-    @FXML
     private ListView listView;
 
     private Stage stage;
@@ -66,12 +63,6 @@ public class ClientController {
         this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
         t = new Thread(cc);
         t.start();
-    }
-
-    public void onRefreshButton(ActionEvent event) {
-        listView.getItems().clear();
-        downloadEmailList();
-        viewEmailList();
     }
 
     public void onExitButton(ActionEvent event) {
@@ -161,19 +152,23 @@ public class ClientController {
         System.out.println("clicked on " + listView.getSelectionModel().getSelectedItem());
         int index = listView.getSelectionModel().getSelectedIndex();
         System.out.println(index);
-        ArrayList<Email> emailListUpdate = this.cc.getEmailListUP();
-        this.emailList = reverseEmailList(emailListUpdate);
-        System.out.println(this.emailList.size());
-        Email emailSingle = this.emailList.get(index);
+        if (index != -1) {
+            ArrayList<Email> emailListUpdate = this.cc.getEmailListUP();
+            this.emailList = reverseEmailList(emailListUpdate);
+            System.out.println(this.emailList.size());
+            Email emailSingle = this.emailList.get(index);
 
-        FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("ViewEmail.fxml"));
-        root = loader.load();
-        EmailController scene2Controller = loader.getController();
-        scene2Controller.passEmail(emailSingle, this.email);
-        stage = (Stage)((Node)mouseEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+            FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("ViewEmail.fxml"));
+            root = loader.load();
+            EmailController scene2Controller = loader.getController();
+            scene2Controller.passEmail(emailSingle, this.email);
+            stage = (Stage)((Node)mouseEvent.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else
+            System.out.println("clicked on null on listView");
+
     }
 
     private ArrayList<Email> downloadEmailList() {

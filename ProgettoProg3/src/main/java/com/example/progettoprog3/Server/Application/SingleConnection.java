@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.io.File.*;
+import java.util.concurrent.locks.Lock;
+
 import com.example.progettoprog3.Model.Email;
 import com.example.progettoprog3.Model.EmailList;
 
@@ -19,15 +21,19 @@ public class SingleConnection implements Runnable{
     private Socket incoming = null;
     private Object container = null;
     private HashMap<String, Integer> users;
+    private Lock readLock;
+    private Lock writeLock;
 
     @FXML
     private TextArea log;
 
-    public SingleConnection(TextArea log, Socket incoming) {
+    public SingleConnection(TextArea log, Socket incoming, Lock readLock, Lock writeLock) {
         this.log = log;
+        this.readLock = readLock;
+        this.writeLock = writeLock;
         this.incoming = incoming;
         users = new HashMap<>();
-        users.put("giulio.cesare.it", 0);
+        users.put("giulio@cesare.it", 0);
         users.put("mario@rossi.it", 1);
         users.put("luigi@bianchi.it", 2);
     }
@@ -55,7 +61,9 @@ public class SingleConnection implements Runnable{
                         System.out.println(temp[1]);
                         path = "src/main/java/com/example/progettoprog3/Server/User/" + temp[1] + ".txt";
                         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+                        readLock.lock();
                         EmailList emailList = (EmailList)ois.readObject();
+                        readLock.unlock();
                         ois.close();
 
                         //send the obj EmailList to the client
@@ -67,7 +75,9 @@ public class SingleConnection implements Runnable{
                         log.appendText("User: " + cont + " is logged in \n");
                         //read the obj EmailList from file
                         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+                        readLock.lock();
                         EmailList emailList = (EmailList)ois.readObject();
+                        readLock.unlock();
                         ois.close();
 
                         //send the obj EmailList to the client
@@ -85,13 +95,17 @@ public class SingleConnection implements Runnable{
                         log.appendText("User: " + email.toStringReceiver() + " has deleted: " + email.getObject() + " email \n");
                         //catch the obj EmailList from file
                         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+                        readLock.lock();
                         EmailList emailList = (EmailList)ois.readObject();
+                        readLock.unlock();
                         ois.close();
                         //delete the email from arraylist
                         emailList.deleteEmail(email);
                         //write the updated obj EmailList into the file
                         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+                        writeLock.lock();
                         oos.writeObject(emailList);
+                        writeLock.unlock();
                         oos.flush();
                         oos.close();
                     } else {
@@ -107,12 +121,16 @@ public class SingleConnection implements Runnable{
                             for (String receiver : receivers) {
                                 //catch the obj EmailList from file
                                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path1 + receiver + ".txt"));
+                                readLock.lock();
                                 EmailList emailList = (EmailList)ois.readObject();
+                                readLock.unlock();
                                 emailList.addEmail(email);
                                 ois.close();
                                 //write the updated obj EmailList into the file
                                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path1 + receiver + ".txt"));
+                                writeLock.lock();
                                 oos.writeObject(emailList);
+                                writeLock.unlock();
                                 oos.flush();
                                 oos.close();
                                 log.appendText("New email arrived from: " + email.getSender() + " to: " + receiver + "\n");

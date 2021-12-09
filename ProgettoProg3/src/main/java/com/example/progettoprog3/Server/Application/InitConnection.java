@@ -13,12 +13,19 @@ import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class InitConnection implements Runnable{
 
-    public ServerSocket s = null;
+    private ServerSocket s = null;
     private ExecutorService exec = null;
     private SingleConnection sc = null;
+    private ReadWriteLock rwl = null;
+    private Lock readLock = null;
+    private Lock writeLock = null;
+
 
     @FXML
     private TextArea log;
@@ -27,6 +34,9 @@ public class InitConnection implements Runnable{
         // store parameter for later user
         this.log = log;
         this.s = s;
+        this.rwl = new ReentrantReadWriteLock();
+        this.readLock = rwl.readLock();
+        this.writeLock = rwl.writeLock();
     }
 
     @Override
@@ -38,7 +48,7 @@ public class InitConnection implements Runnable{
             try {
                 try {
                     Socket incoming = s.accept();
-                    sc = new SingleConnection(log, incoming);
+                    sc = new SingleConnection(log, incoming, this.readLock, this.writeLock);
                     exec.execute(sc);
                 } catch (SocketException sckt) {
                     exec.shutdown();

@@ -209,11 +209,17 @@ public class EmailController {
         sbj = subject.getText();
         String[] temp = sbj.split(" ");
         boolean res = true;
-        if (sbj.isBlank())
+        if (temp.length == 0){
             res = false;
+            System.out.println("ciao");
+        }
+        if (temp[0].isBlank())
+            System.out.println("ASDRUBALE");
+        System.out.println(temp[0]);
         for (int i = 0; i < temp.length && res; i++) {
             if (!temp[i].contains("@") || (!temp[i].contains(".it") && !temp[i].contains(".com"))) {
-                res = false;
+                if (!temp[i].isBlank())
+                    res = false;
             }
         }
         if (res) {
