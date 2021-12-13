@@ -4,26 +4,22 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.progettoprog3.Client.Controller.EmailController">
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox layoutX="119.0" layoutY="355.0" prefHeight="31.0" prefWidth="362.0">
-               <children>
-                  <Button fx:id="replyButton" mnemonicParsing="false" onAction="#onReplyButton" text="Reply" />
-                  <Button fx:id="replyAllButton" mnemonicParsing="false" onAction="#onReplyAllButton" text="Reply All" />
-                  <Button fx:id="forwardButton" mnemonicParsing="false" onAction="#onForwardButton" text="Forward" />
-                  <Button fx:id="forwardAllButton" mnemonicParsing="false" onAction="#onForwardAllButton" text="Forward All" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
-               </children>
-            </HBox>
             <Button fx:id="goBackButton" layoutX="38.0" layoutY="27.0" mnemonicParsing="false" onAction="#onBackButton" text="Back" />
-            <Label fx:id="objectLabel" alignment="CENTER" layoutX="127.0" layoutY="31.0" prefHeight="16.0" prefWidth="337.0" style="-fx-alignment: center;" />
-            <TextArea fx:id="textAreaEmail" layoutX="38.0" layoutY="62.0" prefHeight="251.0" prefWidth="515.0" />
-            <Label fx:id="dateLabel" layoutX="328.0" layoutY="322.0" prefHeight="16.0" prefWidth="225.0" style="-fx-alignment: top-right;" />
-            <Label fx:id="senderLabel" layoutX="38.0" layoutY="322.0" prefHeight="16.0" prefWidth="282.0" style="-fx-alignment: top-left;" />
+            <Label fx:id="objectLabel" alignment="CENTER" layoutX="95.0" layoutY="31.0" prefHeight="16.0" prefWidth="455.0" style="-fx-alignment: center;" AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="31.0" />
+            <TextArea fx:id="textAreaEmail" layoutX="38.0" layoutY="62.0" prefHeight="251.0" prefWidth="515.0" AnchorPane.bottomAnchor="87.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="47.0" AnchorPane.topAnchor="62.0" />
+            <Label fx:id="dateLabel" layoutX="328.0" layoutY="322.0" prefHeight="16.0" prefWidth="225.0" style="-fx-alignment: top-right;" AnchorPane.bottomAnchor="62.0" AnchorPane.rightAnchor="47.0" />
+            <Label fx:id="senderLabel" layoutX="38.0" layoutY="322.0" prefHeight="16.0" prefWidth="282.0" style="-fx-alignment: top-left;" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="38.0" />
+            <Button fx:id="replyButton" layoutX="36.0" layoutY="350.0" mnemonicParsing="false" onAction="#onReplyButton" text="Reply" AnchorPane.bottomAnchor="26.0" />
+            <Button fx:id="replyAllButton" layoutX="104.0" layoutY="350.0" mnemonicParsing="false" onAction="#onReplyAllButton" text="Reply All" AnchorPane.bottomAnchor="26.0" />
+            <Button fx:id="forwardButton" layoutX="208.0" layoutY="350.0" mnemonicParsing="false" onAction="#onForwardButton" text="Forward" AnchorPane.bottomAnchor="26.0" />
+            <Button fx:id="forwardAllButton" layoutX="296.0" layoutY="350.0" mnemonicParsing="false" onAction="#onForwardAllButton" text="Forward All" AnchorPane.bottomAnchor="26.0" />
+            <Button fx:id="deleteButton" layoutX="492.0" layoutY="350.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="47.0" />
+            <AnchorPane layoutX="429.0" layoutY="350.0" prefHeight="24.0" prefWidth="55.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="429.0" AnchorPane.rightAnchor="116.0" AnchorPane.topAnchor="350.0" />
          </children>
       </AnchorPane>
    </children>

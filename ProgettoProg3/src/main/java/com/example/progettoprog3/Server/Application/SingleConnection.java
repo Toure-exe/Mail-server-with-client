@@ -1,32 +1,38 @@
 package com.example.progettoprog3.Server.Application;
 
+import com.example.progettoprog3.Model.Email;
+import com.example.progettoprog3.Model.EmailList;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.io.File.*;
 import java.util.concurrent.locks.Lock;
 
-import com.example.progettoprog3.Model.Email;
-import com.example.progettoprog3.Model.EmailList;
-
+/**
+ *
+ * @author Giulio Taralli & Ismaila Toure & Lorenzo Camilleri
+ */
 public class SingleConnection implements Runnable{
 
-    private Socket incoming = null;
-    private Object container = null;
-    private HashMap<String, Integer> users;
-    private Lock readLock;
-    private Lock writeLock;
-
     @FXML
-    private TextArea log;
+    private final TextArea log;
 
+    private final Socket incoming;
+    private final HashMap<String, Integer> users;
+    private final Lock readLock;
+    private final Lock writeLock;
+
+    /**
+     * Constructor of the class that will later be executed as a thread.
+     * @param log log of the interfaceServer.fxml
+     * @param incoming socket client-server
+     * @param readLock read lock
+     * @param writeLock write lock
+     */
     public SingleConnection(TextArea log, Socket incoming, Lock readLock, Lock writeLock) {
         this.log = log;
         this.readLock = readLock;
@@ -38,6 +44,12 @@ public class SingleConnection implements Runnable{
         users.put("luigi@bianchi.it", 2);
     }
 
+    /**
+     * Executable method of the thread, it will fulfill the client's request such as downloading, sending,
+     * or deleting e-mails.
+     * The success or failure of a successful client request will be printed in the server log.
+     * If the request from the client is incorrect an error log will be printed.
+     */
     @Override
     public void run() {
         String[] temp;
@@ -47,9 +59,7 @@ public class SingleConnection implements Runnable{
                 String path;
                 ObjectInputStream in = new ObjectInputStream(incoming.getInputStream());
                 ObjectOutputStream outStream = new ObjectOutputStream(incoming.getOutputStream());
-                //Scanner in = new Scanner(inStream);
-                PrintWriter out = new PrintWriter(outStream, true);
-                container = in.readObject();
+                Object container = in.readObject();
                 if (container instanceof String) {
                     String cont = (String)container;
 
@@ -70,7 +80,7 @@ public class SingleConnection implements Runnable{
                         outStream.writeObject(emailList);
                         outStream.flush();
                         outStream.close();
-                    } else if (cont.contains("@")) {
+                    } /*else if (cont.contains("@")) {
                         path = "src/main/java/com/example/progettoprog3/Server/User/" + cont + ".txt";
                         log.appendText("User: " + cont + " is logged in \n");
                         //read the obj EmailList from file
@@ -84,7 +94,7 @@ public class SingleConnection implements Runnable{
                         outStream.writeObject(emailList);
                         outStream.flush();
                         outStream.close();
-                    }
+                    }*/
                 } else if (container instanceof Email) {
                     System.out.println("!!!!!");
                     Email email = (Email)container;
@@ -114,8 +124,10 @@ public class SingleConnection implements Runnable{
                         ArrayList<String> receivers = email.getReceiver();
                         boolean res = true;
                         for (String receiver : receivers) {
-                            if (!users.containsKey(receiver) && res)
+                            if (!users.containsKey(receiver)) {
                                 res = false;
+                                break;
+                            }
                         }
                         if (res) {
                             for (String receiver : receivers) {
@@ -141,14 +153,13 @@ public class SingleConnection implements Runnable{
                             log.appendText("Email error. Wrong receiver \n");
                         }
                     }
-                }
+                } else
+                    log.appendText("Error. Client request could not be fulfilled\n");
             } finally {
                 incoming.close();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
-
 }

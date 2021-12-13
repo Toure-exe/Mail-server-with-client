@@ -1,5 +1,7 @@
 package com.example.progettoprog3.Client.Application;
 
+import com.example.progettoprog3.Model.Email;
+
 import com.example.progettoprog3.Model.EmailList;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,25 +16,25 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import com.example.progettoprog3.Model.EmailList;
-import com.example.progettoprog3.Model.Email;
-
 public class ClientConnection implements Runnable {
 
     @FXML
-    private ListView listView;
+    private final ListView<String> listView;
 
-    private String email;
-    volatile ArrayList<Email> currentEmailList = null;
-    private ArrayList<Email> updatedEmailList = null;
+    private final String email;
+    private final Alert alert;
     private String clientIP = null;
-    private Socket s = null;
-    private UpdateVisualization uv;
-    private ConncectionError ce;
-    private Alert alert;
     private String show;
+    volatile ArrayList<Email> currentEmailList;
 
-    public ClientConnection(String email, ListView listView, ArrayList<Email> currentEmailList, Alert alert) {
+    /**
+     * Constructor of the class that will later be executed as a thread.
+     * @param email e-mail of the client
+     * @param listView list view of e-mail of the client
+     * @param currentEmailList current list of e-mail of the client
+     * @param alert alert error
+     */
+    public ClientConnection(String email, ListView<String> listView, ArrayList<Email> currentEmailList, Alert alert) {
         this.email = email;
         this.listView = listView;
         this.currentEmailList = currentEmailList;
@@ -40,8 +42,26 @@ public class ClientConnection implements Runnable {
         this.show = null;
     }
 
+    /**
+     * Executable method of the thread client, every 5 seconds it downloads the e-mail and checks if there have been
+     * updated, if there are it notifies the user through an alert, otherwise it does nothing.
+     *
+     * To perform updates on the xfml file such as sending alerts or updating the list view, disposable executables
+     * will be created using the static method Platform.runLater.
+     *
+     * If the connection with the server fails, it sends a permanent alert to the client that will prevent them
+     * from using the connection, while the thread will try to reconnect with the server, if the connection is
+     * re-established, the thread will make the alert disappear.
+     *
+     * The thread will be executed only when the user is in the InterfaceClient.fxml interface and will be interrupted
+     * when the user changes scene, and then recreates when he returns to the interface.
+     */
     @Override
     public void run() {
+        ArrayList<Email> updatedEmailList;
+        Socket s;
+        UpdateVisualization uv;
+        ConnectionError ce;
         try {
             clientIP = InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
@@ -51,7 +71,7 @@ public class ClientConnection implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 s = new Socket(clientIP, 8189);
-                ce = new ConncectionError(this.alert, true, this.show);
+                ce = new ConnectionError(this.alert, true, this.show);
                 Platform.runLater(ce);
                 this.show = null;
                 try {
@@ -59,27 +79,20 @@ public class ClientConnection implements Runnable {
                     out.writeObject("UPDATE-" + this.email);
 
                     ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-                    EmailList emailobj = (EmailList)in.readObject();
+                    EmailList emailObj = (EmailList)in.readObject();
 
                     if (this.currentEmailList == null) {
-                        this.currentEmailList = emailobj.getEmailList();
+                        this.currentEmailList = emailObj.getEmailList();
                         uv = new UpdateVisualization(this.listView, currentEmailList, false);
                         Platform.runLater(uv);
                     } else {
-                        this.updatedEmailList = emailobj.getEmailList();
+                        updatedEmailList = emailObj.getEmailList();
                         if (currentEmailList.size() < updatedEmailList.size()) {
                             System.out.println("invio alert nuova email");
                             currentEmailList = updatedEmailList;
                             //launch the alert and reload the email box
                             uv = new UpdateVisualization(this.listView, currentEmailList, true);
                             Platform.runLater(uv);
-                        /*Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-
-                            }
-                        });*/
-
                         } else {
                             System.out.println("non fare nulla");
                         }
@@ -89,11 +102,10 @@ public class ClientConnection implements Runnable {
                     Thread.sleep(5000);
                 }
             } catch (IOException e) {
-                //e.printStackTrace();
-                //break;
                 if (this.show == null) {
+                    System.out.println("quiiiii");
                     this.show = "NOT NULL";
-                    ce = new ConncectionError(this.alert, false, this.show);
+                    ce = new ConnectionError(this.alert, false, this.show);
                     Platform.runLater(ce);
                 }
             } catch (InterruptedException | ClassNotFoundException e1) {
@@ -103,8 +115,20 @@ public class ClientConnection implements Runnable {
         }
     }
 
+    /**
+     * Function to get the current e-mail list
+     * @return the current list of e-mail
+     */
     public ArrayList<Email> getEmailListUP() {
         return currentEmailList;
     }
 
+    /**
+     * Function to set the emailList updated when the user push the refresh button
+     * if the length of this emailList is different from that downloaded in ClientConnection.
+     * @param emailListUP the emailList to be updated
+     */
+    public void setEmailListUP(ArrayList<Email> emailListUP) {
+        this.currentEmailList = emailListUP;
+    }
 }
