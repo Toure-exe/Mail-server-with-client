@@ -34,6 +34,7 @@ public class ServerApplication extends Application {
         FXMLLoader loader = new FXMLLoader(ServerApplication.class.getResource("InterfaceServer.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Server Log");
         stage.setResizable(false);

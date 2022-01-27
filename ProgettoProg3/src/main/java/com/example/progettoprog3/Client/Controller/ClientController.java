@@ -188,6 +188,7 @@ public class ClientController {
             root = loader.load();
             stage = (Stage)((Node)mouseEvent.getSource()).getScene().getWindow();
             scene = new Scene(root);
+            scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(true);
             stage.setMinHeight(450.0);
@@ -275,6 +276,7 @@ public class ClientController {
         root = loader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
+        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMinHeight(450.0);

@@ -1,0 +1,43 @@
+.root{
+    -fx-background-color: #111111;
+}
+
+.label{
+    -fx-font-size: 14;
+    -fx-font-family: "Lucida Console";
+    -fx-text-fill: "white";
+    -fx-alignment: center;
+}
+
+.button{
+    -fx-font-family: "Lucida Console";
+    -fx-background-color: #6d476d;
+    -fx-text-fill: white;
+}
+
+.list-cell{
+    -fx-background-color: #463b46;
+    -fx-text-fill: white;
+}
+
+.list-cell:filled:hover{
+    -fx-background-color: white;
+    -fx-text-fill: #463b46;
+}
+.text-area .content{
+    -fx-background-color:#463b46;
+}
+
+.text-area {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.text-field{
+    -fx-background-color: #463b46;
+    -fx-text-fill: white;
+}
+
+#titleLabel{
+    -fx-font-size: 70;
+}

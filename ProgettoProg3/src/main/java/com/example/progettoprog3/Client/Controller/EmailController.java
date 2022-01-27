@@ -382,6 +382,7 @@ public class EmailController {
         root = loader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
+        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMinHeight(450.0);
