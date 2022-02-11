@@ -57,22 +57,24 @@ public class ClientController {
             event.consume();
             exitApplication(stage);
         });
-        if (firstTime)
+        if (firstTime) {
             welcomeLabel.setText("Hello: " + this.email);
-        else
+            setConnection(email, firstTime);
+        } else {
             welcomeLabel.setText("You are logged with: " + this.email);
-        setConnection(email);
+            setConnection(email, firstTime);
+        }
     }
 
     /**
      * Function that launch execution of the client thread dedicated to downloading and updating e-mails.
      * @param email the e-mail string of the client
      */
-    private void setConnection(String email) {
+    private void setConnection(String email, boolean firstTime) {
         this.email = email;
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.initStyle(StageStyle.UNDECORATED);
-        this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
+        this.cc = new ClientConnection(this.email, this.listView, this.emailList, a, firstTime);
         t = new Thread(cc);
         t.start();
     }

@@ -78,7 +78,12 @@ public class SingleConnection implements Runnable{
                         outStream.writeObject(emailList);
                         outStream.flush();
                         outStream.close();
+                    } else {
+                        //user is just logged in
+                        log.appendText("User: " + cont + " logged in.\n");
                     }
+
+
                 } else if (container instanceof Email) {
                     Email email = (Email)container;
                     String[] user = email.toStringReceiver().split(" ");

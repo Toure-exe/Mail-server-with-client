@@ -23,6 +23,7 @@ public class ClientConnection implements Runnable {
 
     private final String email;
     private final Alert alert;
+    private boolean firstTime;
     private String clientIP = null;
     private String show;
     volatile ArrayList<Email> currentEmailList;
@@ -34,12 +35,13 @@ public class ClientConnection implements Runnable {
      * @param currentEmailList current list of e-mail of the client
      * @param alert alert error
      */
-    public ClientConnection(String email, ListView<String> listView, ArrayList<Email> currentEmailList, Alert alert) {
+    public ClientConnection(String email, ListView<String> listView, ArrayList<Email> currentEmailList, Alert alert, boolean fistTime) {
         this.email = email;
         this.listView = listView;
         this.currentEmailList = currentEmailList;
         this.alert = alert;
         this.show = null;
+        this.firstTime = fistTime;
     }
 
     /**
@@ -76,6 +78,12 @@ public class ClientConnection implements Runnable {
                 this.show = null;
                 try {
                     ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                    //send email user if this is the firs time from the server
+                    if (this.firstTime) {
+                        out.writeObject(this.email);
+                        this.firstTime = false;
+                    }
+                    //notify the server an emailList update
                     out.writeObject("UPDATE-" + this.email);
 
                     ObjectInputStream in = new ObjectInputStream(s.getInputStream());
