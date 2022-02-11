@@ -50,8 +50,6 @@ public class InitConnection implements Runnable {
         ExecutorService exec = Executors.newFixedThreadPool(5);
         SingleConnection sc;
         while (true) {
-            System.out.println(Thread.currentThread().getId());
-            System.out.println(s);
             try {
                 try {
                     Socket incoming = s.accept();
@@ -60,7 +58,7 @@ public class InitConnection implements Runnable {
                 } catch (SocketException sckt) {
                     exec.shutdown();
                     s.close();
-                    System.out.println("listen here, you little shit");
+                    System.out.println("-- Server, turned off --");
                     break;
                 }
             } catch (IOException e) {

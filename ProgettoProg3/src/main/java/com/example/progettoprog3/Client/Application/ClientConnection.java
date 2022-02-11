@@ -88,13 +88,10 @@ public class ClientConnection implements Runnable {
                     } else {
                         updatedEmailList = emailObj.getEmailList();
                         if (currentEmailList.size() < updatedEmailList.size()) {
-                            System.out.println("invio alert nuova email");
                             currentEmailList = updatedEmailList;
                             //launch the alert and reload the email box
                             uv = new UpdateVisualization(this.listView, currentEmailList, true);
                             Platform.runLater(uv);
-                        } else {
-                            System.out.println("non fare nulla");
                         }
                     }
                 } finally {
@@ -103,13 +100,12 @@ public class ClientConnection implements Runnable {
                 }
             } catch (IOException e) {
                 if (this.show == null) {
-                    System.out.println("quiiiii");
                     this.show = "NOT NULL";
                     ce = new ConnectionError(this.alert, false, this.show);
                     Platform.runLater(ce);
                 }
             } catch (InterruptedException | ClassNotFoundException e1) {
-                System.out.println("Killed process.");
+                System.out.println("-- Killed process --");
                 break;
             }
         }

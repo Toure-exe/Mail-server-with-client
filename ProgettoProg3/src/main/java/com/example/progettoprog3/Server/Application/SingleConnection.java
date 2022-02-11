@@ -53,7 +53,6 @@ public class SingleConnection implements Runnable{
     @Override
     public void run() {
         String[] temp;
-        System.out.println("ci entra");
         try {
             try {
                 String path;
@@ -68,7 +67,6 @@ public class SingleConnection implements Runnable{
                         log.appendText("User: " + temp[1] + " is logged out \n");
                     } else if (cont.contains("@") && cont.contains("UPDATE")) {
                         temp = cont.split("\\-");
-                        System.out.println(temp[1]);
                         path = "src/main/java/com/example/progettoprog3/Server/User/" + temp[1] + ".txt";
                         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
                         readLock.lock();
@@ -80,23 +78,8 @@ public class SingleConnection implements Runnable{
                         outStream.writeObject(emailList);
                         outStream.flush();
                         outStream.close();
-                    } /*else if (cont.contains("@")) {
-                        path = "src/main/java/com/example/progettoprog3/Server/User/" + cont + ".txt";
-                        log.appendText("User: " + cont + " is logged in \n");
-                        //read the obj EmailList from file
-                        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-                        readLock.lock();
-                        EmailList emailList = (EmailList)ois.readObject();
-                        readLock.unlock();
-                        ois.close();
-
-                        //send the obj EmailList to the client
-                        outStream.writeObject(emailList);
-                        outStream.flush();
-                        outStream.close();
-                    }*/
+                    }
                 } else if (container instanceof Email) {
-                    System.out.println("!!!!!");
                     Email email = (Email)container;
                     String[] user = email.toStringReceiver().split(" ");
                     path = "src/main/java/com/example/progettoprog3/Server/User/" + user[0] + ".txt";

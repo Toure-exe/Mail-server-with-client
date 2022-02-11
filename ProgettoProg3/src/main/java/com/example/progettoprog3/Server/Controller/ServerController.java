@@ -31,7 +31,7 @@ public class ServerController {
      * Class initialization function, sets a handler for the management of button X.
      */
     public void initServerController() {
-        Stage stage = (Stage) log.getScene().getWindow();;
+        Stage stage = (Stage) log.getScene().getWindow();
         stage.setOnCloseRequest(event -> {
             event.consume();
             try {
@@ -94,14 +94,13 @@ public class ServerController {
      */
     @FXML
     private void exitApplication(Stage stage) throws IOException {
-        System.out.println("EXIT FROM CLOSE WINDOW BUTTON");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         if (this.t != null) {
             //thread server is active
             alert.setContentText("Are you sure to exit from application? \nThis will cause the turn off of the server");
             if (alert.showAndWait().get() == ButtonType.OK){
-                System.out.println("You successfully logged out");
+                System.out.println("-- You successfully logged out --");
                 this.t.interrupt();
                 this.s.close();
                 this.t = null;
@@ -111,7 +110,7 @@ public class ServerController {
             //thread server is not active
             alert.setContentText("Are you sure to exit from application?");
             if (alert.showAndWait().get() == ButtonType.OK){
-                System.out.println("You successfully logged out");
+                System.out.println("-- You successfully logged out --");
                 stage.close();
             }
         }

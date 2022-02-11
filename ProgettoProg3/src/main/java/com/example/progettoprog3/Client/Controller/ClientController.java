@@ -59,15 +59,8 @@ public class ClientController {
         });
         if (firstTime)
             welcomeLabel.setText("Hello: " + this.email);
-        else {
-            System.out.println("passEmail method: " + this.email);
+        else
             welcomeLabel.setText("You are logged with: " + this.email);
-            /*Alert a = new Alert(Alert.AlertType.ERROR);
-            a.initStyle(StageStyle.TRANSPARENT);
-            this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
-            t = new Thread(cc);
-            t.start();*/
-        }
         setConnection(email);
     }
 
@@ -76,7 +69,6 @@ public class ClientController {
      * @param email the e-mail string of the client
      */
     private void setConnection(String email) {
-        System.out.println(email);
         this.email = email;
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.initStyle(StageStyle.UNDECORATED);
@@ -85,22 +77,6 @@ public class ClientController {
         t.start();
     }
 
-    /*public void displayName(String email) {
-        welcomeLabel.setText("Hello: " + email);
-        setConnection(email);
-    }
-
-    public void passEmail(String email) {
-        this.email = email;
-        System.out.println("passEmail method: " + email);
-        welcomeLabel.setText("You are logged with: " + email);
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.initStyle(StageStyle.TRANSPARENT);
-        this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
-        t = new Thread(cc);
-        t.start();
-    }*/
-
     /**
      * Function logout from the main interface, closes the socket and stops the thread and notifies the server
      * @param event the event
@@ -108,11 +84,9 @@ public class ClientController {
     public void onExitButton(ActionEvent event) {
         try {
             String clientIP = InetAddress.getLocalHost().getHostName();
-            System.out.println(clientIP);
             Socket s = new Socket(clientIP, 8189);
             try {
                 ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(s.getInputStream());
                 out.writeObject("END CONNECTION-" + email);
             } finally {
                 s.close();
@@ -120,7 +94,7 @@ public class ClientController {
                 t.interrupt();
             }
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("-- Error, server temporary down --");
         }
     }
 
@@ -136,59 +110,23 @@ public class ClientController {
         scene2Controller.initEmailController(this.email);
     }
 
-    /*private boolean setConnection(String email) {
-        System.out.println(email);
-        try {
-            this.email = email;
-            String clientIP = InetAddress.getLocalHost().getHostName();
-            System.out.println(clientIP);
-            Socket s = new Socket(clientIP, 8189);
-            System.out.println("Ho aperto il socket verso il server.\n");
-            try {
-                ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                out.writeObject(email);
-
-                ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-                EmailList emailobj = (EmailList)in.readObject();
-                ArrayList<Email> emailListDownload = emailobj.getEmailList();
-                this.emailList = reverseEmailList(emailListDownload);
-                viewEmailList();
-                Alert a = new Alert(Alert.AlertType.ERROR);
-                a.initStyle(StageStyle.UNDECORATED);
-                this.cc = new ClientConnection(this.email, this.listView, this.emailList, a);
-                t = new Thread(cc);
-                t.start();
-            } finally {
-                s.close();
-                return true;
-            }
-        } catch (IOException e) {
-            System.out.println("Error");
-            return false;
-        }
-    }*/
-
     /**
      * Manages the choice of an element in the listview displays the selected mail, changes scene and controller
      * @param mouseEvent the event
      * @throws IOException when the FXMLLoader loader the controller improperly
      */
     public void handleMouseClick(MouseEvent mouseEvent) throws IOException {
-        System.out.println("clicked on " + listView.getSelectionModel().getSelectedItem());
         int index = listView.getSelectionModel().getSelectedIndex();
-        System.out.println(index);
         if (index != -1) {
             t.interrupt();
             ArrayList<Email> emailListUpdate = this.cc.getEmailListUP();
             this.emailList = reverseEmailList(emailListUpdate);
-            System.out.println(this.emailList.size());
             Email emailSingle = this.emailList.get(index);
 
             FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("ViewEmail.fxml"));
             root = loader.load();
             stage = (Stage)((Node)mouseEvent.getSource()).getScene().getWindow();
             scene = new Scene(root);
-            scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(true);
             stage.setMinHeight(450.0);
@@ -196,8 +134,7 @@ public class ClientController {
             stage.show();
             EmailController scene2Controller = loader.getController();
             scene2Controller.passEmail(emailSingle, this.email);
-        } else
-            System.out.println("clicked on null on listView");
+        }
     }
 
     /**
@@ -208,7 +145,7 @@ public class ClientController {
      */
     public void onRefreshButton() {
         ArrayList<Email> emailListDownloaded = downloadEmailList();
-        if (emailListDownloaded.size() != this.cc.getEmailListUP().size()) {
+        if (emailListDownloaded != null && emailListDownloaded.size() != this.cc.getEmailListUP().size()) {
             this.listView.getItems().clear();
             this.cc.setEmailListUP(emailListDownloaded);
             this.emailList = reverseEmailList(emailListDownloaded);
@@ -236,10 +173,11 @@ public class ClientController {
                 s.close();
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error");
-        } finally {
+            System.out.println("-- Error, server temporary down --");
             return this.emailList;
         }
+        return this.emailList;
+
     }
 
     /**
@@ -276,7 +214,6 @@ public class ClientController {
         root = loader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMinHeight(450.0);
@@ -293,12 +230,11 @@ public class ClientController {
      */
     @FXML
     private void exitApplication(Stage stage) {
-        System.out.println("EXIT FROM CLOSE WINDOW BUTTON");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
         if (alert.showAndWait().get() == ButtonType.OK){
-            System.out.println("You successfully logged out");
+            System.out.println("-- You successfully logged out --");
             this.t.interrupt();
             stage.close();
         }

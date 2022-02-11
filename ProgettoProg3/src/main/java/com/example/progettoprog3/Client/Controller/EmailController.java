@@ -64,7 +64,6 @@ public class EmailController {
             event.consume();
             exitApplication(stage);
         });
-        System.out.println(this.email);
     }
 
     /**
@@ -86,7 +85,6 @@ public class EmailController {
                 event.consume();
                 exitApplication(stage);
             });
-            System.out.println("E TU CI ENTRIIIIII");
             objectLabel.setText("Object: " + this.emailObj.getObject());
             dateLabel.setText("Date: " + this.emailObj.getDate());
             senderLabel.setText("Sender: " + this.emailObj.getSender());
@@ -96,7 +94,7 @@ public class EmailController {
                 forwardAllButton.setVisible(false);
             }
         } else
-            System.out.println("Error");
+            System.out.println("-- Error, the object passed as a parameter is not of type Email --");
 
     }
 
@@ -242,7 +240,6 @@ public class EmailController {
         if (sendEmail(this.emailObj)) {
             FXMLLoader loader = switchScene(event, "InterfaceClient.fxml");
             ClientController scene2Controller = loader.getController();
-            System.out.println("onBackButton method: " + this.email);
             scene2Controller.initClientController(this.email, false);
         }
     }
@@ -260,7 +257,6 @@ public class EmailController {
             //return to the home page (Interface.xfml)
             loader = switchScene(event, "InterfaceClient.fxml");
             ClientController scene2Controller = loader.getController();
-            System.out.println("onBackButton method: " + this.email);
             scene2Controller.initClientController(this.email, false);
         } else {
             //return to the view email (ViewEmail.xfml)
@@ -290,10 +286,9 @@ public class EmailController {
             res = false;
         else {
             String[] temp = sbj.split(" ");
-            if (temp.length == 0){
+            if (temp.length == 0)
                 res = false;
-                System.out.println("ciao");
-            } else {
+            else {
                 for (int i = 0; i < temp.length && res; i++) {
                     if (!temp[i].contains("@") || (!temp[i].contains(".it") && !temp[i].contains(".com"))) {
                         if (!temp[i].isBlank())
@@ -307,15 +302,10 @@ public class EmailController {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             date = dtf.format(now);
-            System.out.println(date);
-            System.out.println(obj);
-            System.out.println(sbj);
-            System.out.println(textEmail);
             Email email = new Email(sbj, this.email, obj, textEmail, date);
             if (sendEmail(email)) {
                 FXMLLoader loader = switchScene(event, "InterfaceClient.fxml");
                 ClientController scene2Controller = loader.getController();
-                System.out.println("onBackButton method: " + this.email);
                 scene2Controller.initClientController(this.email, false);
             }
         } else {
@@ -356,12 +346,12 @@ public class EmailController {
                     res =  true;
                 }
             } catch (ClassNotFoundException e1) {
-                System.out.println("Error");
+                System.out.println("-- Error, object obtained not of type String --");
             } finally {
                 s.close();
             }
         } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("-- Error, server temporary down --");
             a.setContentText("Server temporary down, please try again");
             a.show();
             return false;
@@ -382,7 +372,6 @@ public class EmailController {
         root = loader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMinHeight(450.0);
@@ -399,12 +388,11 @@ public class EmailController {
      */
     @FXML
     private void exitApplication(Stage stage) {
-        System.out.println("EXIT FROM CLOSE WINDOW BUTTON");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
         if (alert.showAndWait().get() == ButtonType.OK){
-            System.out.println("You successfully logged out");
+            System.out.println("-- You successfully logged out --");
             stage.close();
         }
     }

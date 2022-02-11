@@ -41,47 +41,18 @@ public class LoginController {
             root = loader.load();
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
-            scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
             stage.setScene(scene);
             stage.show();
             stage.setResizable(true);
             stage.setMinHeight(450.0);
             stage.setMinWidth(600.0);
-            System.out.println("login");
+            System.out.println("-- Login successfully --");
             ClientController scene2Controller = loader.getController();
             scene2Controller.initClientController(emailLoader, true);
         } else {
-            System.out.println("login non riuscito");
+            System.out.println("-- Login failed --");
             a.setContentText("Error, wrong login");
             a.show(); //show the dialog
         }
     }
-
-    /*public void onLoginButtonPushed(ActionEvent event) throws IOException {
-        String currentEmail = email.getText();
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        if(list.search(currentEmail)){
-            String emailLoader = email.getText();
-            FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource("InterfaceClient.fxml"));
-            root = loader.load();
-            ClientController scene2Controller = loader.getController();
-            if(scene2Controller.displayName(emailLoader)) {
-                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-                stage.setResizable(true);
-                stage.setMinHeight(450.0);
-                stage.setMinWidth(600.0);
-            } else {
-                a.setContentText("Server temporary down");
-                a.show(); //show the dialog
-            }
-            System.out.println("login");
-        } else {
-            System.out.println("login non riuscito");
-            a.setContentText("Error, wrong login");
-            a.show(); //show the dialog
-        }
-    }*/
 }

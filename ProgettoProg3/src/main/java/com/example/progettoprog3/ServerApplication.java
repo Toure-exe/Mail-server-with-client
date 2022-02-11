@@ -24,17 +24,9 @@ public class ServerApplication extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
-        /*FXMLLoader fxmlLoader = new FXMLLoader(ServerApplication.class.getResource("InterfaceServer.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Server Log");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();*/
-
         FXMLLoader loader = new FXMLLoader(ServerApplication.class.getResource("InterfaceServer.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Server Log");
         stage.setResizable(false);

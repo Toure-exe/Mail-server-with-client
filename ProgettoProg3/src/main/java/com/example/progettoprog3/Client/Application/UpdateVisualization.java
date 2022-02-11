@@ -44,14 +44,11 @@ public class UpdateVisualization implements Runnable {
             a.setContentText("You have new email!");
             a.show();
         }
-        System.out.println(listView);
         ArrayList<Email> emailListrReverse = reverseEmailList(this.emailList);
         this.listView.getItems().clear();
         if (emailListrReverse != null && emailListrReverse.size() > 0) {
-            for (Email tempEmail : emailListrReverse) {
-                System.out.println("ci entri");
+            for (Email tempEmail : emailListrReverse)
                 this.listView.getItems().add("From: " + tempEmail.getSender() + " Object: " + tempEmail.getObject() + " Date: " + tempEmail.getDate());
-            }
         }
         this.listView = null;
     }
