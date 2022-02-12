@@ -24,6 +24,7 @@ public class ClientApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ClientApplication.class.getResource("Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
         stage.setTitle("Email Manager");
         stage.setScene(scene);
         stage.setResizable(false);

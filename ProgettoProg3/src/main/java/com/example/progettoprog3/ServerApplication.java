@@ -28,6 +28,7 @@ public class ServerApplication extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        scene.getStylesheets().add(ServerApplication.class.getResource("layout.css").toExternalForm());
         stage.setTitle("Server Log");
         stage.setResizable(false);
         stage.show();
