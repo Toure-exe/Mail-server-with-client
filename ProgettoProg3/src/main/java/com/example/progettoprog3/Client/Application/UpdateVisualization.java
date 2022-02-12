@@ -41,7 +41,7 @@ public class UpdateVisualization implements Runnable {
         if (this.alert) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("New Email");
-            a.setContentText("You have new email!");
+            a.setContentText("You have a new email!");
             a.show();
         }
         ArrayList<Email> emailListrReverse = reverseEmailList(this.emailList);

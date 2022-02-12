@@ -392,8 +392,8 @@ public class EmailController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
-        if (alert.showAndWait().get() == ButtonType.OK){
-            System.out.println("-- You successfully logged out --");
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            System.out.println("-- You have successfully logged out --");
             stage.close();
         }
     }

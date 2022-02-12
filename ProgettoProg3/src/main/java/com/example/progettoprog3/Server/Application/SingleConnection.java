@@ -16,7 +16,7 @@ import java.util.concurrent.locks.Lock;
  *
  * @author Giulio Taralli & Ismaila Toure & Lorenzo Camilleri
  */
-public class SingleConnection implements Runnable{
+public class SingleConnection implements Runnable {
 
     @FXML
     private final TextArea log;
@@ -104,6 +104,7 @@ public class SingleConnection implements Runnable{
                         writeLock.lock();
                         oos.writeObject(emailList);
                         writeLock.unlock();
+                        outStream.writeObject("OK");
                         oos.flush();
                         oos.close();
                     } else {

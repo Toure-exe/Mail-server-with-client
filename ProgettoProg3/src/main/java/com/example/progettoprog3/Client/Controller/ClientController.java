@@ -57,13 +57,11 @@ public class ClientController {
             event.consume();
             exitApplication(stage);
         });
-        if (firstTime) {
+        if (firstTime)
             welcomeLabel.setText("Hello: " + this.email);
-            setConnection(email, firstTime);
-        } else {
+        else
             welcomeLabel.setText("You are logged with: " + this.email);
-            setConnection(email, firstTime);
-        }
+        setConnection(email, firstTime);
     }
 
     /**
@@ -212,7 +210,7 @@ public class ClientController {
      * @return the loader
      * @throws IOException when the FXMLLoader loader the controller improperly
      */
-    public FXMLLoader switchScene(ActionEvent event, String fileXML) throws IOException {
+    private FXMLLoader switchScene(ActionEvent event, String fileXML) throws IOException {
         FXMLLoader loader = new FXMLLoader(ClientApplication.class.getResource(fileXML));
         root = loader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -237,8 +235,8 @@ public class ClientController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
-        if (alert.showAndWait().get() == ButtonType.OK){
-            System.out.println("-- You successfully logged out --");
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            System.out.println("-- You have successfully logged out --");
             this.t.interrupt();
             stage.close();
         }

@@ -26,7 +26,7 @@ public class ClientConnection implements Runnable {
     private boolean firstTime;
     private String clientIP = null;
     private String show;
-    volatile ArrayList<Email> currentEmailList;
+    private ArrayList<Email> currentEmailList;
 
     /**
      * Constructor of the class that will later be executed as a thread.
@@ -73,9 +73,11 @@ public class ClientConnection implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 s = new Socket(clientIP, 8189);
-                ce = new ConnectionError(this.alert, true, this.show);
-                Platform.runLater(ce);
-                this.show = null;
+                if (this.show != null) {
+                    ce = new ConnectionError(this.alert, true, this.show);
+                    Platform.runLater(ce);
+                    this.show = null;
+                }
                 try {
                     ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                     //send email user if this is the firs time from the server

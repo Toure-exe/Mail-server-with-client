@@ -116,7 +116,11 @@ public class ServerController {
         }
     }
 
-    //funzione reset memory, debug only, da eliminare.
+    /**
+     * Reset the memory of the server.
+     * It'll set the memory of all users empty.
+     */
+    @FXML
     public void onResetEmailButton() {
         EmailList giulioCesare = new EmailList();
         EmailList luigiBianchi = new EmailList();
@@ -142,7 +146,7 @@ public class ServerController {
             oos.flush();
             oos.close();
 
-            log.appendText("The memory is reset\n");
+            log.appendText("The memory is been reset\n");
 
         } catch (IOException e) {
             e.printStackTrace();
