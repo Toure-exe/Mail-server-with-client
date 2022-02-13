@@ -1,11 +1,13 @@
 package com.example.progettoprog3.Server.Controller;
 
+import com.example.progettoprog3.ClientApplication;
 import com.example.progettoprog3.Server.Application.InitConnection;
 import com.example.progettoprog3.Model.EmailList;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
@@ -23,6 +25,7 @@ public class ServerController {
 
     private ServerSocket s = null;
     private Thread t = null;
+    private DialogPane dialog;
 
     @FXML
     protected void initialize() { log.setEditable(false); }
@@ -96,6 +99,9 @@ public class ServerController {
     private void exitApplication(Stage stage) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
+        dialog = alert.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         if (this.t != null) {
             //thread server is active
             alert.setContentText("Are you sure to exit from application? \nThis will cause the turn off of the server");

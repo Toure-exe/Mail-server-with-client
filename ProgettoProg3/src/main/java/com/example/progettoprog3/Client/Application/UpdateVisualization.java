@@ -1,9 +1,11 @@
 package com.example.progettoprog3.Client.Application;
 
+import com.example.progettoprog3.ClientApplication;
 import com.example.progettoprog3.Model.Email;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ public class UpdateVisualization implements Runnable {
 
     private final ArrayList<Email> emailList;
     private final boolean alert;
+    private DialogPane dialog;
 
     /**
      * Constructor of the class that will later be executed as a thread.
@@ -42,6 +45,9 @@ public class UpdateVisualization implements Runnable {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("New Email");
             a.setContentText("You have a new email!");
+            dialog = a.getDialogPane();
+            dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+            dialog.getStyleClass().add("dialog");
             a.show();
         }
         ArrayList<Email> emailListrReverse = reverseEmailList(this.emailList);

@@ -20,6 +20,10 @@
     -fx-text-fill: white;
 }
 
+.list-view {
+    -fx-background-color: #463b46;
+}
+
 .list-cell:filled:hover{
     -fx-background-color: white;
     -fx-text-fill: #463b46;
@@ -40,4 +44,21 @@
 
 #titleLabel{
     -fx-font-size: 70;
+}
+
+/*css for alert*/
+.dialog {
+    -fx-background-color: #463b46;
+}
+
+.dialog .header-panel {
+    -fx-background-color: #463b46;
+}
+
+.dialog .header-panel .label{
+    -fx-alignment: center-left;
+}
+
+.dialog > *.label.content{
+    -fx-alignment: center-left;
 }

@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -42,6 +43,7 @@ public class ClientController {
     private ArrayList<Email> emailList = null;
     private Thread t = null;
     private ClientConnection cc = null;
+    private DialogPane dialog;
 
     /**
      * Initialization function of this class, every other controller must go through this function.
@@ -72,6 +74,9 @@ public class ClientController {
         this.email = email;
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.initStyle(StageStyle.UNDECORATED);
+        dialog = a.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         this.cc = new ClientConnection(this.email, this.listView, this.emailList, a, firstTime);
         t = new Thread(cc);
         t.start();
@@ -235,6 +240,9 @@ public class ClientController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
+        dialog = alert.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         if (alert.showAndWait().get() == ButtonType.OK) {
             System.out.println("-- You have successfully logged out --");
             this.t.interrupt();

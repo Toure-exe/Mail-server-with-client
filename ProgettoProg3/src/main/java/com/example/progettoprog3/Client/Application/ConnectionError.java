@@ -1,7 +1,9 @@
 package com.example.progettoprog3.Client.Application;
 
+import com.example.progettoprog3.ClientApplication;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 
 /**
  *
@@ -12,6 +14,7 @@ public class ConnectionError implements Runnable {
     private final boolean hide;
     private final Alert alert;
     private final String show;
+    private DialogPane dialog;
 
     /**
      * Constructor of the class that will later be executed as a thread.
@@ -40,6 +43,9 @@ public class ConnectionError implements Runnable {
                 this.alert.setAlertType(Alert.AlertType.ERROR); // set alert type
                 this.alert.setContentText("Server temporary down, please wait...");
                 this.alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+                dialog = this.alert.getDialogPane();
+                dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+                dialog.getStyleClass().add("dialog");
                 this.alert.show();// show the dialog
             }
         }

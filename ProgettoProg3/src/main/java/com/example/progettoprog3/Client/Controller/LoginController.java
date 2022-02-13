@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class LoginController {
     private TextField email;
 
     private final UsersList list = new UsersList();
+    private DialogPane dialog;
 
     /**
      * Check that the email entered is in the e-mail list and if it is present we change the scene in interfaceClient.xfml,
@@ -34,6 +36,9 @@ public class LoginController {
     public void onLoginButtonPushed(ActionEvent event) throws IOException {
         Stage stage; Scene scene; Parent root;
         Alert a = new Alert(Alert.AlertType.ERROR);
+        dialog = a.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         String currentEmail = email.getText();
         if (list.search(currentEmail)) {
             String emailLoader = email.getText();

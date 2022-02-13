@@ -46,10 +46,10 @@ public class EmailController {
     @FXML
     private Button sendButton;
 
-
     private String email;
     private Email emailObj;
     private boolean homePage;
+    private DialogPane dialog;
 
     /**
      * Initialization function of this class, every other controller must go through this function.
@@ -312,6 +312,9 @@ public class EmailController {
             //email insert not correctly
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setContentText("Wrong email, please write again");
+            dialog = a.getDialogPane();
+            dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+            dialog.getStyleClass().add("dialog");
             Optional<ButtonType> result = a.showAndWait();
             if (!result.isPresent() || result.get() == ButtonType.OK) {
                 // alert is exited, no button has been pressed or okay button is pressed
@@ -328,6 +331,9 @@ public class EmailController {
     private boolean sendEmail(Email email) {
         boolean res = false;
         Alert a = new Alert(Alert.AlertType.ERROR);
+        dialog = a.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         try {
             String clientIP = InetAddress.getLocalHost().getHostName();
             Socket s = new Socket(clientIP, 8189);
@@ -392,6 +398,9 @@ public class EmailController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Are you sure to exit from application?");
+        dialog = alert.getDialogPane();
+        dialog.getStylesheets().add(ClientApplication.class.getResource("layout.css").toExternalForm());
+        dialog.getStyleClass().add("dialog");
         if (alert.showAndWait().get() == ButtonType.OK) {
             System.out.println("-- You have successfully logged out --");
             stage.close();
